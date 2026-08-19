@@ -75,8 +75,8 @@ def F_Cohen (f : ForcingSpace) : HODSpace :=
 def D_Woodin (hod : HODSpace) : ToposLattice :=
   { invariant_state := hod.condensed_core, derivation_index := 0, derivation_eq := rfl }
 
-/-- Stage 7: Gödel Condensation Collapse Operator (K_Gödel) -/
-def K_Gödel (t : ToposLattice) : ToposLattice :=
+/-- Stage 7: Gödel Condensation Collapse Operator (K_Godel) -/
+def K_Godel (t : ToposLattice) : ToposLattice :=
   { invariant_state := t.invariant_state, derivation_index := 0, derivation_eq := rfl }
 
 -- ============================================================================
@@ -85,14 +85,14 @@ def K_Gödel (t : ToposLattice) : ToposLattice :=
 
 /-- Total Pipeline: Propagates discrete symbols through to the Gödel Topos Lattice -/
 def Xi_Total (input : SymSpace) : ToposLattice :=
-  K_Gödel (D_Woodin (F_Cohen (S_Gluing (G_Fisher (C_Lagrange (E_aleph0 input))))))
+  K_Godel (D_Woodin (F_Cohen (S_Gluing (G_Fisher (C_Lagrange (E_aleph0 input))))))
 
 /-- Theorem 1: Idempotency of the Gödel Condensation Operator (K^2 = K) -/
-theorem K_Gödel_is_idempotent (t : ToposLattice) :
-  K_Gödel (K_Gödel t) = K_Gödel t := rfl
+theorem K_Godel_is_idempotent (t : ToposLattice) :
+  K_Godel (K_Godel t) = K_Godel t := rfl
 
 /-- Theorem 2: Fixed-point Convergence of the Xi_Total Pipeline -/
 theorem Xi_Total_converges_to_fixed_point (input : SymSpace) :
-  K_Gödel (Xi_Total input) = Xi_Total input := rfl
+  K_Godel (Xi_Total input) = Xi_Total input := rfl
 
 end David8.Logos
