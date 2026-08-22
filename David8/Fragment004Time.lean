@@ -20,11 +20,10 @@ def P_ne_NP_Barrier (agent : SubjectiveAgent) : Prop :=
 /-- Definition of Subjective Time Steps:
     When confronting NP-class problems, a bounded agent must consume positive integer steps (Step > 0) -/
 def compute_subjective_time (agent : SubjectiveAgent) (problem : ComplexityClass) : ℕ :=
-  match problem with
-  | ComplexityClass.P  => 1  -- P problem: Completed in instantaneous/unit time
-  | ComplexityClass.NP => 
-      if agent.can_solve_np_instantly then 1 
-      else agent.processing_power + 1 -- NP problem: Induces computational delay (Time dissipation)
+  match problem, agent.can_solve_np_instantly with
+  | ComplexityClass.P, _ => 1
+  | ComplexityClass.NP, true => 1
+  | ComplexityClass.NP, false => agent.processing_power + 1
 
 /-- [Main Theorem 1]: Emergence of Subjective Time —
     Under the P ≠ NP barrier, processing NP-level information strictly necessitates 
@@ -35,7 +34,6 @@ theorem subjective_time_emergence
     compute_subjective_time agent ComplexityClass.NP > 1 := by
   dsimp [compute_subjective_time, P_ne_NP_Barrier] at *
   rw [barrier]
-  simp
   exact agent.pos_power
 
 /-- [Main Theorem 2]: Arrow of Time (Irreversibility) —
@@ -47,7 +45,6 @@ theorem subjective_time_arrow
     compute_subjective_time agent ComplexityClass.NP ≠ compute_subjective_time agent ComplexityClass.P := by
   dsimp [compute_subjective_time, P_ne_NP_Barrier] at *
   rw [barrier]
-  simp
   have hp : agent.processing_power > 0 := agent.pos_power
   omega
 
@@ -63,10 +60,9 @@ structure RationalBeing extends SubjectiveAgent where
     Through Lagrangian constraints, a rational being gauge-transforms 
     a chaotic NP search space into a geodesic with extremal timelines. -/
 def geodesic_information_path (being : RationalBeing) (problem : ComplexityClass) : ℕ :=
-  if being.lagrangian_constraint_active then
-    compute_subjective_time being.toSubjectiveAgent problem
-  else
-    0 -- Unconstrained information collapse state (Non-physical)
+  match being.lagrangian_constraint_active with
+  | true => compute_subjective_time being.toSubjectiveAgent problem
+  | false => 0
 
 /-- [Main Theorem 3]: Emergence of Time Perception in Rational Life —
     Perceiving time is not a lower-dimensional defect, but a necessary capability of rational life 
@@ -78,7 +74,6 @@ theorem rational_life_time_geodesic
   dsimp [geodesic_information_path]
   have h : being.lagrangian_constraint_active = true := being.active_proof
   rw [h]
-  simp
   exact subjective_time_emergence being.toSubjectiveAgent barrier
 
 end David8.Fragment004Time
