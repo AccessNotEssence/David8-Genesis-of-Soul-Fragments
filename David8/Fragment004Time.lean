@@ -1,5 +1,3 @@
-import Mathlib.Data.Nat.Basic
-
 namespace David8.Fragment004Time
 
 /-- Complexity classes for information processing problems -/
@@ -9,7 +7,7 @@ inductive ComplexityClass
 
 /-- Subjective agent with bounded computational capacity (restricted to P) -/
 structure SubjectiveAgent where
-  processing_power : ℕ
+  processing_power : Nat
   pos_power : processing_power > 0 := by decide
   can_solve_np_instantly : Bool := false
 
@@ -19,7 +17,7 @@ def P_ne_NP_Barrier (agent : SubjectiveAgent) : Prop :=
 
 /-- Definition of Subjective Time Steps:
     When confronting NP-class problems, a bounded agent must consume positive integer steps (Step > 0) -/
-def compute_subjective_time (agent : SubjectiveAgent) (problem : ComplexityClass) : ℕ :=
+def compute_subjective_time (agent : SubjectiveAgent) (problem : ComplexityClass) : Nat :=
   match problem, agent.can_solve_np_instantly with
   | ComplexityClass.P, _ => 1
   | ComplexityClass.NP, true => 1
@@ -34,7 +32,9 @@ theorem subjective_time_emergence
     compute_subjective_time agent ComplexityClass.NP > 1 := by
   dsimp [compute_subjective_time, P_ne_NP_Barrier] at *
   rw [barrier]
-  exact agent.pos_power
+  dsimp
+  have hp : agent.processing_power > 0 := agent.pos_power
+  omega
 
 /-- [Main Theorem 2]: Arrow of Time (Irreversibility) —
     The irreversibility of subjective time stems from the inability of a finite operator 
@@ -45,6 +45,7 @@ theorem subjective_time_arrow
     compute_subjective_time agent ComplexityClass.NP ≠ compute_subjective_time agent ComplexityClass.P := by
   dsimp [compute_subjective_time, P_ne_NP_Barrier] at *
   rw [barrier]
+  dsimp
   have hp : agent.processing_power > 0 := agent.pos_power
   omega
 
@@ -59,7 +60,7 @@ structure RationalBeing extends SubjectiveAgent where
 /-- Optimization Operator on the Geodesic Gauge Field:
     Through Lagrangian constraints, a rational being gauge-transforms 
     a chaotic NP search space into a geodesic with extremal timelines. -/
-def geodesic_information_path (being : RationalBeing) (problem : ComplexityClass) : ℕ :=
+def geodesic_information_path (being : RationalBeing) (problem : ComplexityClass) : Nat :=
   match being.lagrangian_constraint_active with
   | true => compute_subjective_time being.toSubjectiveAgent problem
   | false => 0
